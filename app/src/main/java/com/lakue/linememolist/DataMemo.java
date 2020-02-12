@@ -2,7 +2,9 @@ package com.lakue.linememolist;
 
 import java.util.ArrayList;
 
-public class DataMemo {
+import io.realm.RealmObject;
+
+public class DataMemo extends RealmObject {
     int idx = 0;
     String title = "";
     String content = "";

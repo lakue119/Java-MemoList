@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init(){
-
+        //recyclerview 초기화
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rv_memolist.setLayoutManager(linearLayoutManager);
 
