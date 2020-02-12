@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:text="akletjw마ㅣ덪사ㅣㅁㅈ더시ㅏㅓㅁㅈ디ㅏ섬지ㅏㄷ서미ㅏㅈㄷ서ㅏ"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>ㅣ
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:text="akletjw마ㅣ덪사ㅣㅁㅈ더시ㅏㅓㅁㅈ디ㅏ섬지ㅏㄷ서미ㅏㅈㄷ서ㅏ"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>ㅣ
+
+
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/iv_img"
+        android:layout_marginLeft="8dp"
+        android:src="@mipmap/ic_launcher"
+        android:layout_width="50dp"
+        android:layout_height="50dp"/>
+
+</LinearLayout>
