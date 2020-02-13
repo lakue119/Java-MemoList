@@ -1,4 +1,4 @@
-package com.lakue.linememolist;
+package com.lakue.linememolist.ViewHolder;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -6,6 +6,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.lakue.linememolist.Model.DataMemo;
+import com.lakue.linememolist.R;
 
 public class ViewHolderMemo extends RecyclerView.ViewHolder {
 

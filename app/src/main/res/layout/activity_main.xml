@@ -4,12 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:orientation="vertical"
+    tools:context=".Activity.MainActivity">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_weight="1"
         android:padding="16dp"
         android:id="@+id/rv_memolist"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <Button
+        android:id="@+id/btn_edit_move"
+        android:textStyle="bold"
+        android:text="글 작성"
+        android:textColor="@color/colorWhite"
+        android:background="@color/colorBlack"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"/>
 
 </LinearLayout>

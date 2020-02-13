@@ -1,14 +1,15 @@
-package com.lakue.linememolist;
+package com.lakue.linememolist.Adapter;
 
-import android.content.Context;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.lakue.linememolist.Model.DataMemo;
+import com.lakue.linememolist.R;
+import com.lakue.linememolist.ViewHolder.ViewHolderMemo;
 
 import java.util.ArrayList;
 
@@ -34,7 +35,7 @@ public class AdapterRecyclerView extends RecyclerView.Adapter<RecyclerView.ViewH
         return listData.size();
     }
 
-    void addItem(DataMemo data) {
+    public void addItem(DataMemo data) {
         // 외부에서 item을 추가시킬 함수입니다.
         listData.add(data);
     }

@@ -10,4 +10,5 @@
     <color name="colorGray_d">#ddd</color>
     <color name="colorGray_9">#999</color>
     <color name="colorGray_6">#666</color>
+    <color name="colorLightGray">#eeeeee</color>
 </resources>

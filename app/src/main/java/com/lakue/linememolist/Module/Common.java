@@ -1,4 +1,4 @@
-package com.lakue.linememolist;
+package com.lakue.linememolist.Module;
 
 import android.content.Context;
 
