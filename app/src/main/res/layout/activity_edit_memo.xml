@@ -23,22 +23,21 @@
                 android:layout_marginBottom="16dp"
                 android:padding="10dp"
                 android:id="@+id/et_title"
-                android:background="@drawable/background_rounding_10_white"
+                android:background="@color/colorWhite"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="top"
                 android:hint="제을 입력해주세요."/>
 
             <LinearLayout
-                android:background="@drawable/background_rounding_10_white"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <EditText
+                    android:background="@drawable/background_rounding_10_white"
                     android:padding="10dp"
                     android:id="@+id/et_content"
-                    android:background="@color/colorWhite"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
                     android:gravity="top"

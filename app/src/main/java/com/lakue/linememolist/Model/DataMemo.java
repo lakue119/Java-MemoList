@@ -2,13 +2,14 @@ package com.lakue.linememolist.Model;
 
 import java.util.ArrayList;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 
 public class DataMemo extends RealmObject {
     int idx = 0;
     String title = "";
     String content = "";
-    //ArrayList<String> imgs = new ArrayList<>();
+    //RealmList<DataMemoImg> imgs = new RealmList<>();
 
     public DataMemo(){
 
@@ -19,6 +20,8 @@ public class DataMemo extends RealmObject {
         this.title = title;
         this.content = content;
     }
+
+
 
 
     public int getIdx() {
@@ -62,4 +65,7 @@ public class DataMemo extends RealmObject {
 //                ", imgs=" + imgs +
 //                '}';
 //    }
+
+
+
 }

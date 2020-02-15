@@ -14,6 +14,7 @@ import com.lakue.linememolist.ViewHolder.ViewHolderGridEditItem;
 import java.util.ArrayList;
 
 public class AdapterGridView extends BaseAdapter {
+
     Context context;
     LayoutInflater inf;
 
@@ -31,7 +32,7 @@ public class AdapterGridView extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return myItems.size();
+        return myItems.size()+1;
     }
 
     @Override
@@ -56,8 +57,14 @@ public class AdapterGridView extends BaseAdapter {
         if (convertView == null)
             convertView = inf.inflate(R.layout.item_editmemo_img, null);
 
-        ViewHolderGridEditItem viewHolderGridEventDetail = new ViewHolderGridEditItem(context,convertView);
-        viewHolderGridEventDetail.onBind(myItems.get(position));
+        if(position == myItems.size()){
+            ViewHolderGridEditItem viewHolderGridEventDetail = new ViewHolderGridEditItem(context,convertView);
+        } else{
+            ViewHolderGridEditItem viewHolderGridEventDetail = new ViewHolderGridEditItem(context,convertView);
+            viewHolderGridEventDetail.onBind(myItems.get(position));
+        }
+
+
 //        viewHolderGridEventDetail.setOnAddCartListener(new OnAddCartListener() {
 //            @Override
 //            public void onAddCart(Boolean isOption, int idx, int sku_id, Bundle args) {
@@ -68,7 +75,7 @@ public class AdapterGridView extends BaseAdapter {
         return convertView;
     }
 
-//    public void removeItem(){
+    //    public void removeItem(){
 //        myItems.clear();
 //    }
 //
