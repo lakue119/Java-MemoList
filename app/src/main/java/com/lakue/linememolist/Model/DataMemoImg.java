@@ -1,18 +1,51 @@
-/*
+
 package com.lakue.linememolist.Model;
 
+import java.io.File;
+
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 public class DataMemoImg extends RealmObject {
-    String imgs;
-    int id;
+    @PrimaryKey
+    long img_idx = 0;
+    long memo_idx = 0;
+    byte[] img_file;
 
-    public String getImgs() {
-        return imgs;
+    public DataMemoImg(){
+
     }
 
-    public void setImgs(String imgs) {
-        this.imgs = imgs;
+    public DataMemoImg(long img_idx, long  memo_idx, byte[] img_file){
+        this.img_idx = img_idx;
+        this.memo_idx = memo_idx;
+        this.img_file = img_file;
     }
+
+    public long getImg_idx() {
+        return img_idx;
+    }
+
+    public void setImg_idx(long img_idx) {
+        this.img_idx = img_idx;
+    }
+
+    public long getMemo_idx() {
+        return memo_idx;
+    }
+
+    public void setMemo_idx(long memo_idx) {
+        this.memo_idx = memo_idx;
+    }
+
+    public byte[] getImg_file() {
+        return img_file;
+    }
+
+    public void setImg_file(byte[] img_file) {
+        this.img_file = img_file;
+    }
+
+
 }
-*/
+

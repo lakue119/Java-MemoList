@@ -63,6 +63,7 @@
 
 
     <Button
+        android:id="@+id/btn_memo_insert"
         android:textStyle="bold"
         android:text="등록"
         android:textColor="@color/colorWhite"

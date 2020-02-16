@@ -4,31 +4,29 @@ import java.util.ArrayList;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 public class DataMemo extends RealmObject {
-    int idx = 0;
+    @PrimaryKey
+    long idx = 0;
     String title = "";
     String content = "";
-    //RealmList<DataMemoImg> imgs = new RealmList<>();
 
     public DataMemo(){
 
     }
 
-    public DataMemo(int idx, String title, String content){
+    public DataMemo(long idx, String title, String content){
         this.idx = idx;
         this.title = title;
         this.content = content;
     }
 
-
-
-
-    public int getIdx() {
+    public long getIdx() {
         return idx;
     }
 
-    public void setIdx(int idx) {
+    public void setIdx(long idx) {
         this.idx = idx;
     }
 
@@ -48,24 +46,12 @@ public class DataMemo extends RealmObject {
         this.content = content;
     }
 
-//    public ArrayList<String> getImgs() {
-//        return imgs;
-//    }
-//
-//    public void setImgs(ArrayList<String> imgs) {
-//        this.imgs = imgs;
-//    }
-
-//    @Override
-//    public String toString() {
-//        return "DataMemo{" +
-//                "idx=" + idx +
-//                ", title='" + title + '\'' +
-//                ", content='" + content + '\'' +
-//                ", imgs=" + imgs +
-//                '}';
-//    }
-
-
-
+    @Override
+    public String toString() {
+        return "DataMemo{" +
+                "idx=" + idx +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                '}';
+    }
 }
