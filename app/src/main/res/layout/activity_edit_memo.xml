@@ -45,16 +45,30 @@
 
             </LinearLayout>
 
-            <com.lakue.linememolist.View.ExpandableHeightGridView
-                android:id="@+id/gv_memo_item"
+<!--            <Button-->
+<!--                android:textColor="@color/colorWhite"-->
+<!--                android:text="사진 첨부"-->
+<!--                android:id="@+id/btn_add_photo"-->
+<!--                android:layout_marginTop="16dp"-->
+<!--                android:background="@color/colorBlack"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="56dp"/>-->
+
+<!--            <com.lakue.linememolist.View.ExpandableHeightGridView-->
+<!--                android:id="@+id/gv_memo_item"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginTop="16dp"-->
+<!--                android:foregroundGravity="center"-->
+<!--                android:gravity="center"-->
+<!--                android:numColumns="3"-->
+<!--                android:stretchMode="columnWidth"-->
+<!--                android:verticalSpacing="1dp" />-->
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_memo_item"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="16dp"
-                android:foregroundGravity="center"
-                android:gravity="center"
-                android:numColumns="3"
-                android:stretchMode="columnWidth"
-                android:verticalSpacing="1dp" />
+                android:layout_height="match_parent"/>
 
 
         </LinearLayout>

@@ -20,25 +20,27 @@ import com.lakue.linememolist.Model.DataMemo;
 import com.lakue.linememolist.Model.DataMemoImg;
 import com.lakue.linememolist.R;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView rv_memolist;
+    @BindView(R.id.rv_memolist)
+    RecyclerView rv_memolist;
+    @BindView(R.id.btn_edit_move)
+    Button btn_edit_move;
+
     private AdapterRecyclerView adapter;
     private Realm realm;
-    Button btn_edit_move;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
-        rv_memolist = findViewById(R.id.rv_memolist);
-        btn_edit_move = findViewById(R.id.btn_edit_move);
+        ButterKnife.bind(this,this);
 
 
         init();

@@ -11,4 +11,7 @@
     <color name="colorGray_9">#999</color>
     <color name="colorGray_6">#666</color>
     <color name="colorLightGray">#eeeeee</color>
+
+
+    <color name="transparency">#00ff0000</color>
 </resources>

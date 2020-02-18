@@ -21,6 +21,10 @@ android {
     realm {
         syncEnabled = true
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -35,4 +39,11 @@ dependencies {
     //Glide 이미지변환
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+
+    //Butterknife
+    implementation 'com.jakewharton:butterknife:10.0.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
+
+    //TedPermission 권한요청
+    implementation 'gun0912.ted:tedpermission:2.2.3'
 }

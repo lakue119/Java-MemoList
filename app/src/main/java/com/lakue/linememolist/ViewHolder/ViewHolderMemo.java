@@ -8,20 +8,25 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lakue.linememolist.Model.DataMemo;
+import com.lakue.linememolist.Model.MyItemView;
 import com.lakue.linememolist.R;
 
-public class ViewHolderMemo extends RecyclerView.ViewHolder {
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-    TextView tv_title, tv_content;
+public class ViewHolderMemo extends MyItemView {
+
+    @BindView(R.id.tv_title)
+    TextView tv_title;
+    @BindView(R.id.tv_content)
+    TextView tv_content;
+    @BindView(R.id.iv_img)
     ImageView iv_img;
 
 
     public ViewHolderMemo(@NonNull View itemView) {
         super(itemView);
-
-        tv_title = itemView.findViewById(R.id.tv_title);
-        tv_content = itemView.findViewById(R.id.tv_content);
-        iv_img = itemView.findViewById(R.id.iv_img);
+        ButterKnife.bind(this,itemView);
 
     }
 
