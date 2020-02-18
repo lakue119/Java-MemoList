@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/colorLightGray"
-    tools:context=".Activity.ActivityEditMemo">
+    tools:context=".Activity.EditMemoActivity">
 
     <androidx.core.widget.NestedScrollView
         android:layout_weight="1"

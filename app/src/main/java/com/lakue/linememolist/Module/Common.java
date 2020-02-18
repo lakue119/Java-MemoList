@@ -20,4 +20,8 @@ public class Common {
     public final static int TYPE_URL = 1003;
     public final static int TYPE_CANCEL = 1003;
 
+
+    public final static int REQUEST_ALBUM = 2001;
+    public final static int REQUEST_IMAGE_CAPTURE = 2002;
+    public final static int REQUEST_IMAGE_TYPE = 2003;
 }

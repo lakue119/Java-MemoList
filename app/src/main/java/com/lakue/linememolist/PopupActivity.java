@@ -84,14 +84,14 @@ public class PopupActivity extends Activity {
             @Override
             public void onClick(View v) {
 //                //데이터 전달하기
-////                Intent intent = new Intent();
-////                intent.putExtra("result", Common.TYPE_ALBUM);
-////                setResult(RESULT_OK, intent);
-////
-////                //액티비티(팝업) 닫기
-////                finish();
-                String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
-                checkPermission(permissions, false);
+                Intent intent = new Intent();
+                intent.putExtra("result", Common.TYPE_ALBUM);
+                setResult(RESULT_OK, intent);
+
+                //액티비티(팝업) 닫기
+                finish();
+//                String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
+//                checkPermission(permissions, false);
             }
         });
 
@@ -99,14 +99,14 @@ public class PopupActivity extends Activity {
             @Override
             public void onClick(View v) {
 //                //데이터 전달하기
-//                Intent intent = new Intent();
-//                intent.putExtra("result", Common.TYPE_PHOTO);
-//                setResult(RESULT_OK, intent);
-//
-//                //액티비티(팝업) 닫기
-//                finish();
-                String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
-                checkPermission(permissions, true);
+                Intent intent = new Intent();
+                intent.putExtra("result", Common.TYPE_PHOTO);
+                setResult(RESULT_OK, intent);
+
+                //액티비티(팝업) 닫기
+                finish();
+//                String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
+//                checkPermission(permissions, true);
             }
         });
 
@@ -135,167 +135,173 @@ public class PopupActivity extends Activity {
             }
         });
     }
+//
+//    //권한 체크
+//    private void checkPermission(String[] permission, final Boolean isCamera) {
+//        PermissionListener permissionlistener = new PermissionListener() {
+//            @Override
+//            public void onPermissionGranted() {
+//                Toast.makeText(PopupActivity.this, "권한 허가", Toast.LENGTH_SHORT).show();
+//                if (isCamera) {
+//                    sendTakePhotoIntent();
+//                } else {
+//                    Intent intent = new Intent(Intent.ACTION_PICK);
+//                    intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+//                    startActivityForResult(intent, PICK_FROM_ALBUM);
+//                }
+//            }
+//
+//            @Override
+//            public void onPermissionDenied(List<String> deniedPermissions) {
+//                Toast.makeText(PopupActivity.this, "권한 거부\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+//            }
+//        };
+//
+//        TedPermission.with(this)
+//                .setPermissionListener(permissionlistener)
+//                .setDeniedMessage("사진 접근 권한을 허용하지 않으면 사진을 올릴 수 없습니다.\n[설정] > [권한] 에서 권한을 허용해주세요.")
+//                .setPermissions(permission)
+//                .check();
+//    }
 
-    private void checkPermission(String[] permission, final Boolean isCamera) {
-        PermissionListener permissionlistener = new PermissionListener() {
-            @Override
-            public void onPermissionGranted() {
-                Toast.makeText(PopupActivity.this, "권한 허가", Toast.LENGTH_SHORT).show();
-                if (isCamera) {
-                    sendTakePhotoIntent();
-                } else {
-                    Intent intent = new Intent(Intent.ACTION_PICK);
-                    intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
-                    startActivityForResult(intent, PICK_FROM_ALBUM);
-                }
-            }
+//    //사진촬영 페이지로 이동
+//    private void sendTakePhotoIntent() {
+//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        if (takePictureIntent.resolveActivity(context.getPackageManager()) != null) {
+//            File photoFile = null;
+//            try {
+//                photoFile = createImageFile();
+//            } catch (IOException ex) {
+//                // Error occurred while creating the File
+//            }
+//
+//            if (photoFile != null) {
+//                photoUri = FileProvider.getUriForFile(context, context.getPackageName(), photoFile);
+//
+//                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+//                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+//            }
+//        }
+//    }
+//
+//    //촬영한 사진을 저장할 file경로와 이름 생성
+//    private File createImageFile() throws IOException {
+//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//        String imageFileName = "TEST_" + timeStamp + "_";
+//        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+//        File image = File.createTempFile(
+//                imageFileName,      /* prefix */
+//                ".jpg",         /* suffix */
+//                storageDir          /* directory */
+//        );
+//        imageFilePath = image.getAbsolutePath();
+//        return image;
+//    }
+//
+//    //가져온 이미지가 회전되어있을 경우 실제 각도 찾아내기
+//    private int exifOrientationToDegrees(int exifOrientation) {
+//        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
+//            return 90;
+//        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
+//            return 180;
+//        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
+//            return 270;
+//        }
+//        return 0;
+//    }
+//
+//    // 이미지 회전
+//    private Bitmap rotate(Bitmap bitmap, float degree) {
+//        Matrix matrix = new Matrix();
+//        matrix.postRotate(degree);
+//        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+//    }
+//
+//    //이미지의 절대경로 가져오기
+//    public String getRealpath(Uri uri) {
+//        String[] proj = {MediaStore.Images.Media.DATA};
+//        Cursor c = context.getContentResolver().query(uri, proj, null, null, null);
+//        int index = c.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+//
+//        c.moveToFirst();
+//        String path = c.getString(index);
+//
+//        return path;
+//    }
 
-            @Override
-            public void onPermissionDenied(List<String> deniedPermissions) {
-                Toast.makeText(PopupActivity.this, "권한 거부\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
-            }
-        };
-
-        TedPermission.with(this)
-                .setPermissionListener(permissionlistener)
-                .setDeniedMessage("사진 접근 권한을 허용하지 않으면 사진을 올릴 수 없습니다.\n[설정] > [권한] 에서 권한을 허용해주세요.")
-                .setPermissions(permission)
-                .check();
-    }
-
-    private void sendTakePhotoIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(context.getPackageManager()) != null) {
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-            }
-
-            if (photoFile != null) {
-                photoUri = FileProvider.getUriForFile(context, context.getPackageName(), photoFile);
-
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            }
-        }
-    }
-
-    private File createImageFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "TEST_" + timeStamp + "_";
-        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,      /* prefix */
-                ".jpg",         /* suffix */
-                storageDir          /* directory */
-        );
-        imageFilePath = image.getAbsolutePath();
-        return image;
-    }
-
-    private int exifOrientationToDegrees(int exifOrientation) {
-        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
-            return 90;
-        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
-            return 180;
-        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
-            return 270;
-        }
-        return 0;
-    }
-
-    private Bitmap rotate(Bitmap bitmap, float degree) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degree);
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-    }
-
-    public String getRealpath(Uri uri) {
-        String[] proj = {MediaStore.Images.Media.DATA};
-        Cursor c = context.getContentResolver().query(uri, proj, null, null, null);
-        int index = c.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-
-        c.moveToFirst();
-        String path = c.getString(index);
-
-        return path;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode != RESULT_OK) return;
-
-
-        if (requestCode == PICK_FROM_ALBUM) {
-            Uri dataUri = data.getData();
-
-            //image = data.getStringExtra("editimage");
-            if (dataUri != null) {
-                image = getRealpath(dataUri);
-                //imagePathToBitmap(image);
-                Log.i("AAAAAAAAAAAAAAAA", "convertImageToByte(dataUri)" + convertImageToByte(dataUri));
-                //데이터 전달하기
-                Intent intent = new Intent();
-                intent.putExtra("result", Common.TYPE_ALBUM);
-                intent.putExtra("data",convertImageToByte(dataUri));
-                setResult(RESULT_OK, intent);
-
-                //액티비티(팝업) 닫기
-                finish();
-            }
-        } else if (requestCode == REQUEST_IMAGE_CAPTURE) {
-            new ConvertTask().execute(imageFilePath);
-        }
-    }
-
-    private class ConvertTask extends AsyncTask<String,Void,byte[]> {
-
-        @Override
-        protected byte[] doInBackground(String... strings) {
-            Bitmap bitmap = BitmapFactory.decodeFile(strings[0]);
-            ExifInterface exif = null;
-
-            try {
-                exif = new ExifInterface(strings[0]);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            int exifOrientation;
-            int exifDegree;
-
-            if (exif != null) {
-                exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-                exifDegree = exifOrientationToDegrees(exifOrientation);
-            } else {
-                exifDegree = 0;
-            }
-
-            rotatebitmap = rotate(bitmap, exifDegree);
-
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            rotatebitmap.compress(Bitmap.CompressFormat.JPEG, 10, stream);
-
-            return stream.toByteArray();
-        }
-
-        //이 Task에서(즉 이 스레드에서) 수행되던 작업이 종료되었을 때 호출됨
-        @Override
-        protected void onPostExecute(byte[] result) {
-            Intent intent = new Intent();
-            intent.putExtra("result", Common.TYPE_PHOTO);
-            intent.putExtra("data",result);
-            setResult(RESULT_OK, intent);
-
-            //액티비티(팝업) 닫기
-            finish();
-        }
-
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (resultCode != RESULT_OK) return;
+//
+//
+//        if (requestCode == PICK_FROM_ALBUM) {
+//            Uri dataUri = data.getData();
+//
+//            //image = data.getStringExtra("editimage");
+//            if (dataUri != null) {
+//                image = getRealpath(dataUri);
+//                //imagePathToBitmap(image);
+//                Log.i("AAAAAAAAAAAAAAAA", "convertImageToByte(dataUri)" + convertImageToByte(dataUri));
+//                //데이터 전달하기
+//                Intent intent = new Intent();
+//                intent.putExtra("result", Common.TYPE_ALBUM);
+//                intent.putExtra("data",convertImageToByte(dataUri));
+//                setResult(RESULT_OK, intent);
+//
+//                //액티비티(팝업) 닫기
+//                finish();
+//            }
+//        } else if (requestCode == REQUEST_IMAGE_CAPTURE) {
+//            new ConvertTask().execute(imageFilePath);
+//        }
+//    }
+//
+//    private class ConvertTask extends AsyncTask<String,Void,byte[]> {
+//
+//        @Override
+//        protected byte[] doInBackground(String... strings) {
+//            Bitmap bitmap = BitmapFactory.decodeFile(strings[0]);
+//            ExifInterface exif = null;
+//
+//            try {
+//                exif = new ExifInterface(strings[0]);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            int exifOrientation;
+//            int exifDegree;
+//
+//            if (exif != null) {
+//                exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+//                exifDegree = exifOrientationToDegrees(exifOrientation);
+//            } else {
+//                exifDegree = 0;
+//            }
+//
+//            rotatebitmap = rotate(bitmap, exifDegree);
+//
+//            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//            rotatebitmap.compress(Bitmap.CompressFormat.JPEG, 10, stream);
+//
+//            return stream.toByteArray();
+//        }
+//
+//        //이 Task에서(즉 이 스레드에서) 수행되던 작업이 종료되었을 때 호출됨
+//        @Override
+//        protected void onPostExecute(byte[] result) {
+//            Intent intent = new Intent();
+//            intent.putExtra("result", Common.TYPE_PHOTO);
+//            intent.putExtra("data",result);
+//            setResult(RESULT_OK, intent);
+//
+//            //액티비티(팝업) 닫기
+//            finish();
+//        }
+//
+//    }
 
 //    private class SaveImageTask extends AsyncTask<byte[], Void, Void> {
 //
@@ -359,18 +365,18 @@ public class PopupActivity extends Activity {
 //        return b;
 //    }
 
-    public byte[] convertImageToByte(Uri uri) {
-        byte[] data = null;
-        try {
-            ContentResolver cr = getBaseContext().getContentResolver();
-            InputStream inputStream = cr.openInputStream(uri);
-            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
-            data = baos.toByteArray();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return data;
-    }
+//    public byte[] convertImageToByte(Uri uri) {
+//        byte[] data = null;
+//        try {
+//            ContentResolver cr = getBaseContext().getContentResolver();
+//            InputStream inputStream = cr.openInputStream(uri);
+//            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+//            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+//            data = baos.toByteArray();
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        return data;
+//    }
 }
