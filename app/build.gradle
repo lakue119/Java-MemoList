@@ -46,4 +46,6 @@ dependencies {
 
     //TedPermission 권한요청
     implementation 'gun0912.ted:tedpermission:2.2.3'
+
+    implementation 'commons-io:commons-io:2.4'
 }

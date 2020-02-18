@@ -7,6 +7,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.lakue.linememolist.Model.DataMemo;
 import com.lakue.linememolist.Model.MyItemView;
 import com.lakue.linememolist.R;
@@ -33,6 +34,6 @@ public class ViewHolderMemo extends MyItemView {
     public void onBind(DataMemo data){
         tv_title.setText(data.getTitle());
         tv_content.setText(data.getContent());
-        //iv_movie.setImageResource(data.getImgs().get(0));
+        Glide.with(itemView.getContext()).load(data.getThumbnail()).into(iv_img);
     }
 }

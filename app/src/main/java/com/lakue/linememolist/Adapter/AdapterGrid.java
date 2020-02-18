@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class AdapterGrid extends RecyclerView.Adapter<MyItemView> {
 
     // adapter에 들어갈 list 입니다.
-    private ArrayList<Object> listData = new ArrayList<>();
+    private ArrayList<byte[]> listData = new ArrayList<>();
     OnImageInsertListener onImageInsertListener;
     OnImageDeleteListener onImageDeleteListener;
     @NonNull
@@ -63,13 +63,21 @@ public class AdapterGrid extends RecyclerView.Adapter<MyItemView> {
         listData.clear();
     }
 
+    public byte[] getImage(int position){
+        if(listData.size() == 0){
+            return null;
+        } else {
+            return listData.get(position);
+        }
+    }
+
     public void removeItem(int position){
         listData.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position,getItemCount());
     }
 
-    public void addItem(Object data) {
+    public void addItem(byte[] data) {
         // 외부에서 item을 추가시킬 함수입니다.
         listData.add(data);
         notifyItemChanged(listData.size()-1);

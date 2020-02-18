@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 .findAllAsync();
 
         for(DataMemo memo : realmResults) {
-            DataMemo data =new DataMemo(memo.getIdx(),memo.getTitle(),memo.getContent());
+            DataMemo data =new DataMemo(memo.getIdx(),memo.getTitle(),memo.getContent(),memo.getThumbnail());
             Log.i("AJKRJK",data.toString());
             adapter.addItem(data);
         }

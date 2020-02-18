@@ -11,15 +11,25 @@ public class DataMemo extends RealmObject {
     long idx = 0;
     String title = "";
     String content = "";
+    byte[] thumbnail = null;
 
     public DataMemo(){
 
     }
 
-    public DataMemo(long idx, String title, String content){
+    public DataMemo(long idx, String title, String content, byte[] thumbnail){
         this.idx = idx;
         this.title = title;
         this.content = content;
+        this.thumbnail = thumbnail;
+    }
+
+    public byte[] getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(byte[] thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
     public long getIdx() {
