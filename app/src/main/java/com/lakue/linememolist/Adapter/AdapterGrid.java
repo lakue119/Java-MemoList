@@ -1,5 +1,6 @@
 package com.lakue.linememolist.Adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +48,7 @@ public class AdapterGrid extends RecyclerView.Adapter<MyItemView> {
             viewHolderGridEditItem.setOnImageDeleteListener(new OnImageDeleteListener() {
                 @Override
                 public void onImageDelete(int position) {
-
+                    onImageDeleteListener.onImageDelete(position);
                 }
             });
         }
@@ -60,6 +61,12 @@ public class AdapterGrid extends RecyclerView.Adapter<MyItemView> {
 
     public void removeItem(){
         listData.clear();
+    }
+
+    public void removeItem(int position){
+        listData.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position,getItemCount());
     }
 
     public void addItem(Object data) {

@@ -35,8 +35,6 @@ public class ViewHolderGridEditItem extends MyItemView {
 
     Context context;
 
-    Drawable bm = null;
-
     OnImageDeleteListener onImageDeleteListener;
     OnImageInsertListener onImageInsertListener;
 
@@ -50,29 +48,15 @@ public class ViewHolderGridEditItem extends MyItemView {
 
     public void onBind(Object data,int position) {
         this.position = position;
-        if(bm  == null) {
-            Glide.with(context)
-                    .load(data)
-                    .into(new SimpleTarget<Drawable>() {
-                        @Override
-                        public void onResourceReady(@NonNull Drawable drawable,
-                                                    @Nullable Transition<? super Drawable>
-                                                            transition) {
-                            bm = drawable;
-                            iv_edit.setImageDrawable(drawable);
 
-                        }
-                    });
+        Glide.with(context).load(data).into(iv_edit);
 
-        } else {
-            iv_edit.setImageDrawable(bm);
-        }
         iv_edit.setEnabled(false);
         iv_delete.setVisibility(View.VISIBLE);
         iv_delete.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
-                Toast.makeText(context, "delete", Toast.LENGTH_SHORT).show();
+                onImageDeleteListener.onImageDelete(position);
             }
         });
     }

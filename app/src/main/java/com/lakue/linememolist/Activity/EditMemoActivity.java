@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.lakue.linememolist.Adapter.AdapterGrid;
+import com.lakue.linememolist.Listener.OnImageDeleteListener;
 import com.lakue.linememolist.Listener.OnImageInsertListener;
 import com.lakue.linememolist.Listener.OnSingleClickListener;
 import com.lakue.linememolist.Model.DataMemo;
@@ -41,8 +42,6 @@ import io.realm.Realm;
 
 public class EditMemoActivity extends AppCompatActivity {
 
-    //    @BindView(R.id.gv_memo_item)
-//    ExpandableHeightGridView gv_memo_item;
     @BindView(R.id.et_title)
     EditText et_title;
     @BindView(R.id.et_content)
@@ -81,7 +80,7 @@ public class EditMemoActivity extends AppCompatActivity {
         //recyclerview 초기화
         GridLayoutManager mGridLayoutManager;
 
-        int numberOfColumns = 3; // 한줄에 5개의 컬럼을 추가합니다.
+        int numberOfColumns = 3; // 한줄에 3개의 컬럼을 추가합니다.
         mGridLayoutManager = new GridLayoutManager(this, numberOfColumns);
         rv_memo_item.setLayoutManager(mGridLayoutManager);
 
@@ -94,23 +93,18 @@ public class EditMemoActivity extends AppCompatActivity {
 
     //이미지 저장
     private void setData() {
-//        String item;
-//        for (int i = 0; i < 1; i++) {
-//
-//            if (i % 2 == 0) {
-//                item = "https://cdn.crewbi.com/images/goods_img/20180906/301986/301986_a_500.jpg?v=1536196415";
-//            } else {
-//                item = "https://seoul-p-studio.bunjang.net/product/60478633_1_1479473294_w640.jpg";
-//            }
-//
-//            adapter.addItem(item);
-//        }
 
         adapter.setOnImageInsertListener(new OnImageInsertListener() {
             @Override
             public void onImageInsert() {
                 Intent intent = new Intent(getApplicationContext(), PopupActivity.class);
                 startActivityForResult(intent, Common.REQUEST_IMAGE_TYPE);
+            }
+        });
+        adapter.setOnImageDeleteListener(new OnImageDeleteListener() {
+            @Override
+            public void onImageDelete(int position) {
+                adapter.removeItem(position);
             }
         });
     }
@@ -143,6 +137,7 @@ public class EditMemoActivity extends AppCompatActivity {
         Realm.init(this);
         realm = Realm.getDefaultInstance();
     }
+
     CameraImage cameraImage = new CameraImage(this);
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -154,11 +149,6 @@ public class EditMemoActivity extends AppCompatActivity {
         switch (requestCode) {
             //갤러리에서 가져올건지.. 사진촬영으로 가져올건지.. URL을 통해 가져올건지를 선택한 결과값
             case Common.REQUEST_IMAGE_TYPE:
-//                if (data.getExtras().getInt("result", 0) == Common.TYPE_ALBUM ||
-//                        data.getExtras().getInt("result", 0) == Common.TYPE_PHOTO) {
-//                    byte[] img = data.getExtras().getByteArray("data");
-//                    adapter.addItem(img);
-//                }
                 if(data.getExtras().getInt("result",0) == Common.TYPE_ALBUM){
                     //앨범으로 이동
                     Intent intent = new Intent(Intent.ACTION_PICK);
@@ -218,7 +208,7 @@ public class EditMemoActivity extends AppCompatActivity {
             Bitmap rotatebitmap = rotate(bitmap, exifDegree);
 
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            rotatebitmap.compress(Bitmap.CompressFormat.JPEG, 10, stream);
+            rotatebitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
 
             return stream.toByteArray();
         }
@@ -227,13 +217,6 @@ public class EditMemoActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(byte[] result) {
             adapter.addItem(result);
-//            Intent intent = new Intent();
-//            intent.putExtra("result", Common.TYPE_PHOTO);
-//            intent.putExtra("data",result);
-//            setResult(RESULT_OK, intent);
-//
-//            //액티비티(팝업) 닫기
-//            finish();
         }
     }
 
@@ -257,18 +240,6 @@ public class EditMemoActivity extends AppCompatActivity {
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
-    //이미지의 절대경로 가져오기
-    public String getRealpath(Uri uri) {
-        String[] proj = {MediaStore.Images.Media.DATA};
-        Cursor c = getContentResolver().query(uri, proj, null, null, null);
-        int index = c.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-
-        c.moveToFirst();
-        String path = c.getString(index);
-
-        return path;
-    }
-
     //Uri타입을 byte[]형식으로 변환
     public byte[] convertImageToByte(Uri uri) {
         byte[] data = null;
@@ -277,7 +248,7 @@ public class EditMemoActivity extends AppCompatActivity {
             InputStream inputStream = cr.openInputStream(uri);
             Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             data = baos.toByteArray();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
