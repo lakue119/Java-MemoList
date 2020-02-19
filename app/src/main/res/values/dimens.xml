@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="side_interval">16dp</dimen>
+    <dimen name="large_button_height">56dp</dimen>
+    <dimen name="edit_padding_interval">10dp</dimen>
+</resources>

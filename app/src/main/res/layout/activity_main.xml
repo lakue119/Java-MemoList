@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/colorLightGray"
     tools:context=".Activity.MainActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_weight="1"
-        android:padding="16dp"
         android:id="@+id/rv_memolist"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp" />
 
     <Button
         android:id="@+id/btn_edit_move"
@@ -21,6 +21,6 @@
         android:textColor="@color/colorWhite"
         android:background="@color/colorBlack"
         android:layout_width="match_parent"
-        android:layout_height="56dp"/>
+        android:layout_height="@dimen/large_button_height"/>
 
 </LinearLayout>

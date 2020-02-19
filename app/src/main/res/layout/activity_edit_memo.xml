@@ -14,56 +14,30 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_margin="20dp"
+            android:layout_margin="@dimen/side_interval"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <EditText
                 android:layout_marginBottom="16dp"
-                android:padding="10dp"
+                android:padding="@dimen/edit_padding_interval"
                 android:id="@+id/et_title"
                 android:background="@color/colorWhite"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="top"
-                android:hint="제을 입력해주세요."/>
+                android:hint="제목을 입력해주세요."/>
 
-            <LinearLayout
-                android:orientation="vertical"
+            <EditText
+                android:lineSpacingExtra="4dp"
+                android:background="@drawable/background_rounding_10_white"
+                android:padding="@dimen/edit_padding_interval"
+                android:id="@+id/et_content"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:background="@drawable/background_rounding_10_white"
-                    android:padding="10dp"
-                    android:id="@+id/et_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:gravity="top"
-                    android:hint="내용을 입력해주세요."/>
-
-            </LinearLayout>
-
-<!--            <Button-->
-<!--                android:textColor="@color/colorWhite"-->
-<!--                android:text="사진 첨부"-->
-<!--                android:id="@+id/btn_add_photo"-->
-<!--                android:layout_marginTop="16dp"-->
-<!--                android:background="@color/colorBlack"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="56dp"/>-->
-
-<!--            <com.lakue.linememolist.View.ExpandableHeightGridView-->
-<!--                android:id="@+id/gv_memo_item"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_marginTop="16dp"-->
-<!--                android:foregroundGravity="center"-->
-<!--                android:gravity="center"-->
-<!--                android:numColumns="3"-->
-<!--                android:stretchMode="columnWidth"-->
-<!--                android:verticalSpacing="1dp" />-->
+                android:layout_height="300dp"
+                android:gravity="top"
+                android:hint="내용을 입력해주세요."/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_memo_item"
@@ -83,6 +57,6 @@
         android:textColor="@color/colorWhite"
         android:background="@color/colorBlack"
         android:layout_width="match_parent"
-        android:layout_height="56dp"/>
+        android:layout_height="@dimen/large_button_height"/>
 
 </LinearLayout>

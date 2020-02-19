@@ -1,16 +1,19 @@
-package com.lakue.linememolist;
+package com.lakue.linememolist.Activity;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.lakue.linememolist.Listener.OnSingleClickListener;
 import com.lakue.linememolist.Module.Common;
+import com.lakue.linememolist.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,7 +34,13 @@ public class PopupActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //타이틀바 없애기
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        if (Build.VERSION.SDK_INT >= 21) {
+            // 21 버전 이상일 때
+            getWindow().setStatusBarColor(getResources().getColor(R.color.transparency));
+        } else {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
         setContentView(R.layout.activity_popup);
 
         ButterKnife.bind(this, this);

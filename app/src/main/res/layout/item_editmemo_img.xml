@@ -9,7 +9,7 @@
     <ImageView
         android:layout_margin="10dp"
         android:id="@+id/iv_edit"
-        android:src="@drawable/fp_b_circleplus"
+        android:src="@drawable/small_circleplus"
         android:scaleType="centerCrop"
         android:layout_width="100dp"
         android:layout_height="100dp"/>

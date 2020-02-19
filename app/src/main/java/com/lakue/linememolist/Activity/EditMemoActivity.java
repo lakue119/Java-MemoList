@@ -1,27 +1,22 @@
 package com.lakue.linememolist.Activity;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.lakue.linememolist.Adapter.AdapterGrid;
 import com.lakue.linememolist.Listener.OnImageDeleteListener;
@@ -29,15 +24,14 @@ import com.lakue.linememolist.Listener.OnImageInsertListener;
 import com.lakue.linememolist.Listener.OnSingleClickListener;
 import com.lakue.linememolist.Model.DataMemo;
 import com.lakue.linememolist.Model.DataMemoImg;
-import com.lakue.linememolist.Module.CameraImage;
+import com.lakue.linememolist.Module.CameraImageModule;
 import com.lakue.linememolist.Module.Common;
-import com.lakue.linememolist.PopupActivity;
+import com.lakue.linememolist.Module.ModuleActivity;
 import com.lakue.linememolist.R;
 
 import org.apache.commons.io.IOUtils;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -48,7 +42,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 
-public class EditMemoActivity extends AppCompatActivity {
+public class EditMemoActivity extends ModuleActivity {
 
     @BindView(R.id.et_title)
     EditText et_title;
@@ -63,25 +57,45 @@ public class EditMemoActivity extends AppCompatActivity {
 
     Realm realm;
 
+    CameraImageModule cameraImageModule;
+
+    Common common;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_memo);
 
         ButterKnife.bind(this, this);
+        common = new Common(this);
 
         init();
-
-        setData();
 
         btn_memo_insert.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
                 //Realm에 작성한 메모 저장
-                addMemo();
+                if(!isDataEmpty()){
+                    addMemo();
+                }
             }
         });
+    }
 
+    //제목,내용을 모두 입력했는지 확인
+    private Boolean isDataEmpty(){
+        String title = et_title.getText().toString();
+        String content = et_content.getText().toString();
+
+        if(title.isEmpty()){
+            common.showToast("제목을 입력해주세요.");
+            return true;
+        }
+        if(content.isEmpty()){
+            common.showToast("내용을 입력해주세요.");
+            return true;
+        }
+        return false;
     }
 
     private void init() {
@@ -97,11 +111,6 @@ public class EditMemoActivity extends AppCompatActivity {
 
         Realm.init(this);
         realm = Realm.getDefaultInstance();
-    }
-
-
-    //이미지 저장
-    private void setData() {
 
         adapter.setOnImageInsertListener(new OnImageInsertListener() {
             @Override
@@ -151,7 +160,8 @@ public class EditMemoActivity extends AppCompatActivity {
         });
     }
 
-    void showDialog() {
+    //URL입력 다이얼로그 생
+    private void showDialog() {
         final EditText edittext = new EditText(this);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -175,8 +185,6 @@ public class EditMemoActivity extends AppCompatActivity {
         builder.show();
     }
 
-    CameraImage cameraImage = new CameraImage(this);
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -189,12 +197,17 @@ public class EditMemoActivity extends AppCompatActivity {
             case Common.REQUEST_IMAGE_TYPE:
                 if (data.getExtras().getInt("result", 0) == Common.TYPE_ALBUM) {
                     //앨범으로 이동
-                    Intent intent = new Intent(Intent.ACTION_PICK);
-                    intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
-                    startActivityForResult(intent, Common.REQUEST_ALBUM);
+                    if(cameraImageModule == null){
+                        cameraImageModule = new CameraImageModule(this);
+                    }
+                    cameraImageModule.showCameraAlbum();
+
                 } else if (data.getExtras().getInt("result", 0) == Common.TYPE_PHOTO) {
                     //사진촬영으로 이동
-                    cameraImage.showCamera();
+                    if(cameraImageModule == null){
+                        cameraImageModule = new CameraImageModule(this);
+                    }
+                    cameraImageModule.showCamera();
 
                 } else if (data.getExtras().getInt("result", 0) == Common.TYPE_URL) {
                     //링크 설정으로 이동
@@ -207,14 +220,14 @@ public class EditMemoActivity extends AppCompatActivity {
                 Uri dataUri = data.getData();
 
                 if (dataUri != null) {
-                    adapter.addItem(convertImageToByte(dataUri));
+                    adapter.addItem(cameraImageModule.convertImageToByte(dataUri));
                 }
 
                 break;
             //사진촬영으로 가져온 이미지
             case Common.REQUEST_IMAGE_CAPTURE:
-                Log.i("AWERAWER", cameraImage.getImageFilePath());
-                new ConvertTask().execute(cameraImage.getImageFilePath());
+                Log.i("AWERAWER", cameraImageModule.getImageFilePath());
+                new ConvertTask().execute(cameraImageModule.getImageFilePath());
                 break;
 
         }
@@ -237,13 +250,20 @@ public class EditMemoActivity extends AppCompatActivity {
                 if(exitCode.getResponseCode() == 200){
                     is = url.openStream ();
                     imageBytes = IOUtils.toByteArray(is);
+
+                    if(!isImage(imageBytes)){
+                        return null;
+                    }
+
                 } else{
-                    Toast.makeText(EditMemoActivity.this, "정상적인 URL을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    common.showToast("정상적인 이미지 URL을 입력해주세요.");
                 }
 
+
+
                 return imageBytes;
-            } catch (IOException e) {
-                Toast.makeText(EditMemoActivity.this, "정상적인 URL을 입력해주세요.", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                //http식으로 안형들어왔을 경우 null을 리턴
                 return null;
             }
         }
@@ -253,8 +273,20 @@ public class EditMemoActivity extends AppCompatActivity {
             if(image != null){
                 adapter.addItem(image);
             } else {
-                Toast.makeText(EditMemoActivity.this, "이미지가 없습니다.", Toast.LENGTH_SHORT).show();
+                common.showToast("정상적인 이미지 URL을 입력해주세요.");
             }
+        }
+    }
+
+    private Boolean isImage(byte[] data){
+        Bitmap img = BitmapFactory.decodeByteArray(data, 0, data.length);
+        if (img == null) {
+            //이미지가 아닌 경우
+            return false;
+        }
+        else {
+            //이미지인경우
+            return true;
         }
     }
 
@@ -277,12 +309,12 @@ public class EditMemoActivity extends AppCompatActivity {
 
             if (exif != null) {
                 exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-                exifDegree = exifOrientationToDegrees(exifOrientation);
+                exifDegree = cameraImageModule.exifOrientationToDegrees(exifOrientation);
             } else {
                 exifDegree = 0;
             }
 
-            Bitmap rotatebitmap = rotate(bitmap, exifDegree);
+            Bitmap rotatebitmap = cameraImageModule.rotate(bitmap, exifDegree);
 
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             rotatebitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
@@ -297,39 +329,4 @@ public class EditMemoActivity extends AppCompatActivity {
         }
     }
 
-
-    //가져온 이미지가 회전되어있을 경우 실제 각도 찾아내기
-    private int exifOrientationToDegrees(int exifOrientation) {
-        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
-            return 90;
-        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
-            return 180;
-        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
-            return 270;
-        }
-        return 0;
-    }
-
-    // 이미지 회전
-    private Bitmap rotate(Bitmap bitmap, float degree) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degree);
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-    }
-
-    //Uri타입을 byte[]형식으로 변환
-    public byte[] convertImageToByte(Uri uri) {
-        byte[] data = null;
-        try {
-            ContentResolver cr = getBaseContext().getContentResolver();
-            InputStream inputStream = cr.openInputStream(uri);
-            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            data = baos.toByteArray();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return data;
-    }
 }

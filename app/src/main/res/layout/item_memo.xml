@@ -1,39 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/colorWhite"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp">
-
+    android:layout_height="wrap_content">
 
     <LinearLayout
-        android:layout_weight="1"
-        android:orientation="vertical"
+        android:id="@+id/ll_memo"
+        android:paddingRight="@dimen/side_interval"
+        android:paddingLeft="@dimen/side_interval"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/tv_title"
-            android:text="akletjw마ㅣ덪사ㅣㅁㅈ더시ㅏㅓㅁㅈ디ㅏ섬지ㅏㄷ서미ㅏㅈㄷ서ㅏ"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>ㅣ
+        <LinearLayout
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/tv_content"
-            android:text="akletjw마ㅣ덪사ㅣㅁㅈ더시ㅏㅓㅁㅈ디ㅏ섬지ㅏㄷ서미ㅏㅈㄷ서ㅏ"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>ㅣ
+            <TextView
+                android:id="@+id/tv_title"
+                android:textColor="@color/colorBlack"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
+            <TextView
+                android:lineSpacingExtra="4dp"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/colorGray_6"
+                android:id="@+id/tv_content"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>ㅣ
+
+
+        </LinearLayout>
+
+
+        <com.lakue.linememolist.View.RoundImageView
+            app:radius="20"
+            android:scaleType="centerCrop"
+            android:id="@+id/iv_img"
+            android:layout_marginLeft="8dp"
+            android:layout_width="72dp"
+            android:layout_height="72dp"/>
 
     </LinearLayout>
 
-
-    <ImageView
-        android:id="@+id/iv_img"
-        android:layout_marginLeft="8dp"
-        android:src="@mipmap/ic_launcher"
-        android:layout_width="50dp"
-        android:layout_height="50dp"/>
+    <View
+        android:background="@color/colorGray_d"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
 
 </LinearLayout>

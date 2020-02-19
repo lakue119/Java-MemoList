@@ -13,9 +13,12 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.lakue.linememolist.Adapter.AdapterRecyclerView;
+import com.lakue.linememolist.Listener.OnItemClickListener;
 import com.lakue.linememolist.Listener.OnSingleClickListener;
 import com.lakue.linememolist.Model.DataMemo;
 import com.lakue.linememolist.Model.DataMemoImg;
+import com.lakue.linememolist.Module.Common;
+import com.lakue.linememolist.Module.ModuleActivity;
 import com.lakue.linememolist.R;
 
 import butterknife.BindView;
@@ -23,7 +26,7 @@ import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends ModuleActivity {
 
     @BindView(R.id.rv_memolist)
     RecyclerView rv_memolist;
@@ -59,15 +62,23 @@ public class MainActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rv_memolist.setLayoutManager(linearLayoutManager);
 
-        adapter = new AdapterRecyclerView();
+        adapter = new AdapterRecyclerView(Common.RECYCLER_TYPE_MEMO_LIST);
         rv_memolist.setAdapter(adapter);
 
         Realm.init(this);
         realm = Realm.getDefaultInstance();
 
         getResultMemoList();
-        getResultMemoImgs();
         Log.e("MainActivityLog", "realm address : " + realm.getPath());
+
+        adapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(long memo_idx) {
+                Intent intent = new Intent(getBaseContext(),MemoDetailActivity.class);
+                intent.putExtra("memo_idx",memo_idx);
+                startActivity(intent);
+            }
+        });
 
 
     }

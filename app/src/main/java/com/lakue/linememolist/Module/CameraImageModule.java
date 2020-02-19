@@ -2,10 +2,11 @@ package com.lakue.linememolist.Module;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -17,28 +18,37 @@ import androidx.core.content.FileProvider;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
-import com.lakue.linememolist.PopupActivity;
+import com.lakue.linememolist.Activity.EditMemoActivity;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class CameraImage {
+public class CameraImageModule {
 
     Context context;
     private String imageFilePath;
 
     private Uri photoUri;
 
-    public CameraImage(Context context){
+    public CameraImageModule(Context context){
         this.context = context;
     }
 
     public void showCamera(){
         String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
         checkPermission(permissions, true);
+    }
+
+    public void showCameraAlbum(){
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+        ((ModuleActivity)context).startActivityForResult(intent, Common.REQUEST_ALBUM);
     }
 
     //권한 체크
@@ -99,6 +109,41 @@ public class CameraImage {
 
     public String getImageFilePath(){
         return imageFilePath;
+    }
+
+    //가져온 이미지가 회전되어있을 경우 실제 각도 찾아내기
+    public int exifOrientationToDegrees(int exifOrientation) {
+        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
+            return 90;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
+            return 180;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
+            return 270;
+        }
+        return 0;
+    }
+
+    // 이미지 회전
+    public Bitmap rotate(Bitmap bitmap, float degree) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degree);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
+
+    //Uri타입을 byte[]형식으로 변환
+    public byte[] convertImageToByte(Uri uri) {
+        byte[] data = null;
+        try {
+            ContentResolver cr = context.getContentResolver();
+            InputStream inputStream = cr.openInputStream(uri);
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            data = baos.toByteArray();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return data;
     }
 
 }
