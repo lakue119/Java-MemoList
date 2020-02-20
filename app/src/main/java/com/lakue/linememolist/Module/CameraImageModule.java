@@ -2,9 +2,9 @@ package com.lakue.linememolist.Module;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -18,13 +18,10 @@ import androidx.core.content.FileProvider;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
-import com.lakue.linememolist.Activity.EditMemoActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -46,9 +43,8 @@ public class CameraImageModule {
     }
 
     public void showCameraAlbum(){
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
-        ((ModuleActivity)context).startActivityForResult(intent, Common.REQUEST_ALBUM);
+        String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
+        checkPermission(permissions, false);
     }
 
     //권한 체크
@@ -56,8 +52,13 @@ public class CameraImageModule {
         PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
-                Toast.makeText(context, "권한 허가", Toast.LENGTH_SHORT).show();
-                sendTakePhotoIntent();
+                if(isCamera){
+                    sendTakePhotoIntent();
+                } else{
+                    Intent intent = new Intent(Intent.ACTION_PICK);
+                    intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+                    ((ModuleActivity)context).startActivityForResult(intent, Common.REQUEST_ALBUM);
+                }
             }
 
             @Override
@@ -130,20 +131,42 @@ public class CameraImageModule {
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
-    //Uri타입을 byte[]형식으로 변환
-    public byte[] convertImageToByte(Uri uri) {
-        byte[] data = null;
+    //갤러리에서 가져온 이미지 정방향으로 회전
+    public byte[] sendPicture(Uri imgUri) {
+
+        String imagePath = getRealPathFromURI(imgUri); // path 경로
+        ExifInterface exif = null;
         try {
-            ContentResolver cr = context.getContentResolver();
-            InputStream inputStream = cr.openInputStream(uri);
-            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            data = baos.toByteArray();
-        } catch (FileNotFoundException e) {
+            exif = new ExifInterface(imagePath);
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        return data;
+        int exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+        int exifDegree = exifOrientationToDegrees(exifOrientation);
+
+        Bitmap bitmap = BitmapFactory.decodeFile(imagePath);//경로를 통해 비트맵으로 전환
+
+        return bitmapToByteArray(rotate(bitmap, exifDegree));
+
+    }
+
+    //비트맥을 byte[]형식으로 변환
+    public byte[] bitmapToByteArray( Bitmap $bitmap ) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream() ;
+        $bitmap.compress( Bitmap.CompressFormat.JPEG, 100, stream) ;
+        byte[] byteArray = stream.toByteArray() ;
+        return byteArray ;
+    }
+
+    private String getRealPathFromURI(Uri contentUri) {
+        int column_index=0;
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+        if(cursor.moveToFirst()){
+            column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        }
+
+        return cursor.getString(column_index);
     }
 
 }

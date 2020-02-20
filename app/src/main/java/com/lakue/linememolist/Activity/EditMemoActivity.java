@@ -41,6 +41,7 @@ import java.net.URLConnection;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class EditMemoActivity extends ModuleActivity {
 
@@ -61,6 +62,9 @@ public class EditMemoActivity extends ModuleActivity {
 
     Common common;
 
+    Boolean isUpdate = false;
+    long memo_idx = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,16 +74,68 @@ public class EditMemoActivity extends ModuleActivity {
         common = new Common(this);
 
         init();
+        checkType();
+
 
         btn_memo_insert.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
                 //Realm에 작성한 메모 저장
                 if(!isDataEmpty()){
-                    addMemo();
+                    if(isUpdate){
+                        updateMemo();
+                    } else{
+                        addMemo();
+                    }
                 }
             }
         });
+    }
+
+    private void updateMemo(){
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+
+                // 쿼리를 해서 하나를 가져온다.
+                DataMemo dataMemo = realm.where(DataMemo.class)
+                        .equalTo("idx", memo_idx)
+                        .findFirst();
+
+                dataMemo.setTitle(et_title.getText().toString());
+                dataMemo.setContent(et_content.getText().toString());
+                dataMemo.setThumbnail(adapter.getImage(0));
+
+                RealmResults<DataMemoImg> realmResultImgs = realm.where(DataMemoImg.class).equalTo("memo_idx", memo_idx).findAll();
+                realmResultImgs.deleteAllFromRealm();
+
+                addMemoImg(memo_idx);
+
+                common.showToast("메모가 수정되었습니다.");
+
+                //데이터 수정 후 MainActivity에 완료를 알림
+                Intent resultIntent = new Intent();
+                setResult(RESULT_OK, resultIntent);
+                finish();
+            }
+        });
+
+    }
+
+    //글 Insert폼인지, Update폼인지 판단
+    private void checkType(){
+        Intent intent = getIntent();
+        if(intent != null){
+            int type = getIntent().getExtras().getInt("type");
+            if(type == Common.TYPE_INTENT_UPDATE){
+                memo_idx = getIntent().getExtras().getLong("memo_idx");
+                isUpdate = true;
+                getResultMemoList();
+                getResultMemoImgs();
+                btn_memo_insert.setText("수정");
+            }
+
+        }
     }
 
     //제목,내용을 모두 입력했는지 확인
@@ -132,32 +188,63 @@ public class EditMemoActivity extends ModuleActivity {
 
         //기본키인 idx를 고유값으로 지정
         Number maxMemoNum = realm.where(DataMemo.class).max("idx");
-        Number maxMemoImgNum = realm.where(DataMemoImg.class).max("img_idx");
         long memoId = maxMemoNum == null ? 0 : maxMemoNum.longValue() + 1;
-        long memoImgId = maxMemoImgNum == null ? 0 : maxMemoImgNum.longValue() + 1;
 
         final DataMemo memo = new DataMemo(memoId, et_title.getText().toString(), et_content.getText().toString(),adapter.getImage(0));
 
         // 트랜잭션을 통해 데이터를 영속화합니다
-        realm.beginTransaction();
-        realm.copyToRealm(memo);   //Realm에 생성한 메모를 저장
-        for(int i=0;i<adapter.getItemCount()-1;i++){
-            realm.copyToRealm(new DataMemoImg(memoImgId+i, memoId, adapter.getImage(i)));
-        }
-        realm.commitTransaction();
+//        realm.beginTransaction();
+//        realm.copyToRealm(memo);   //Realm에 생성한 메모를 저장
+//        addMemoImg(memoId);
+//        realm.commitTransaction();
 
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 //Realm에 생성한 메모를 저장
-                //realm.copyToRealm(memo);
+                realm.copyToRealm(memo);   //Realm에 생성한 메모를 저장
+                addMemoImg(memoId);
 
+                common.showToast("메모가 작성되었습니다.");
                 //데이터 저장 후 MainActivity에 완료를 알림
                 Intent resultIntent = new Intent();
                 setResult(RESULT_OK, resultIntent);
                 finish();
             }
         });
+    }
+
+    private void addMemoImg(long memoId){
+        Number maxMemoImgNum = realm.where(DataMemoImg.class).max("img_idx");
+        long memoImgId = maxMemoImgNum == null ? 0 : maxMemoImgNum.longValue() + 1;
+
+        for(int i=0;i<adapter.getItemCount()-1;i++){
+            realm.copyToRealm(new DataMemoImg(memoImgId+i, memoId, adapter.getImage(i)));
+        }
+
+    }
+
+    //글 수정 폼이면, 메모리스트 데이터 가져오기
+    private void getResultMemoList() {
+        RealmResults<DataMemo> realmResults = realm.where(DataMemo.class)
+                .equalTo("idx", memo_idx)
+                .findAllAsync();
+
+        et_title.setText(realmResults.get(0).getTitle());
+        et_content.setText(realmResults.get(0).getContent());
+
+    }
+    //글 수정 폼이면, 메모이미리스트 데이터 가져오기
+    private void getResultMemoImgs() {
+        RealmResults<DataMemoImg> realmResultImgs = realm.where(DataMemoImg.class)
+                .equalTo("memo_idx", memo_idx)
+                .findAllAsync();
+
+        for (DataMemoImg memoImg : realmResultImgs) {
+            Log.i("AJKRJK", "memoImg" + memoImg.toString());
+            DataMemoImg data = new DataMemoImg(memoImg.getImg_idx(), memoImg.getMemo_idx(), memoImg.getImg_file());
+            adapter.addItem(data.getImg_file());
+        }
     }
 
     //URL입력 다이얼로그 생
@@ -220,7 +307,7 @@ public class EditMemoActivity extends ModuleActivity {
                 Uri dataUri = data.getData();
 
                 if (dataUri != null) {
-                    adapter.addItem(cameraImageModule.convertImageToByte(dataUri));
+                    adapter.addItem(cameraImageModule.sendPicture(dataUri));
                 }
 
                 break;

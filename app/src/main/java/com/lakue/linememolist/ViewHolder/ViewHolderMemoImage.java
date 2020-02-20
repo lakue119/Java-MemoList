@@ -1,13 +1,10 @@
 package com.lakue.linememolist.ViewHolder;
 
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
-import com.lakue.linememolist.Model.DataMemo;
 import com.lakue.linememolist.Model.DataMemoImg;
 import com.lakue.linememolist.Model.MyItemView;
 import com.lakue.linememolist.R;

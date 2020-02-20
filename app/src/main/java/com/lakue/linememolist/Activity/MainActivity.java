@@ -1,16 +1,15 @@
 package com.lakue.linememolist.Activity;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.lakue.linememolist.Adapter.AdapterRecyclerView;
 import com.lakue.linememolist.Listener.OnItemClickListener;
@@ -51,6 +50,7 @@ public class MainActivity extends ModuleActivity {
             @Override
             public void onSingleClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), EditMemoActivity.class);
+                intent.putExtra("type",Common.TYPE_INTENT_INSERT);
                 startActivityForResult(intent, 1001);
             }
         });
@@ -76,7 +76,7 @@ public class MainActivity extends ModuleActivity {
             public void onItemClick(long memo_idx) {
                 Intent intent = new Intent(getBaseContext(),MemoDetailActivity.class);
                 intent.putExtra("memo_idx",memo_idx);
-                startActivity(intent);
+                startActivityForResult(intent,Common.REQUEST_REFRESH_MEMO);
             }
         });
 
@@ -87,20 +87,12 @@ public class MainActivity extends ModuleActivity {
         RealmResults<DataMemo> realmResults = realm.where(DataMemo.class)
                 .findAllAsync();
 
+        realmResults = realmResults.sort("idx");
+
         for(DataMemo memo : realmResults) {
             DataMemo data =new DataMemo(memo.getIdx(),memo.getTitle(),memo.getContent(),memo.getThumbnail());
             Log.i("AJKRJK",data.toString());
             adapter.addItem(data);
-        }
-    }
-
-    private void getResultMemoImgs(){
-        RealmResults<DataMemoImg> realmResultImgs = realm.where(DataMemoImg.class)
-                .findAllAsync();
-
-        for(DataMemoImg memoImg : realmResultImgs) {
-            DataMemoImg data =new DataMemoImg(memoImg.getImg_idx(),memoImg.getMemo_idx(),memoImg.getImg_file());
-            //adapter.addItem(data);
         }
     }
 
@@ -109,8 +101,6 @@ public class MainActivity extends ModuleActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(resultCode == RESULT_OK){
-            Toast.makeText(this, "등록완", Toast.LENGTH_SHORT).show();
-
             adapter.removeItem();
             getResultMemoList();
             adapter.notifyDataSetChanged();

@@ -6,7 +6,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.lakue.linememolist.Listener.OnItemClickListener;
@@ -17,7 +16,6 @@ import com.lakue.linememolist.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import io.realm.RealmObject;
 
 public class ViewHolderMemo extends MyItemView {
@@ -48,6 +46,7 @@ public class ViewHolderMemo extends MyItemView {
         if(dataMemo.getThumbnail() == null){
             iv_img.setVisibility(View.GONE);
         } else {
+            iv_img.setVisibility(View.VISIBLE);
             Glide.with(itemView.getContext()).load(dataMemo.getThumbnail()).into(iv_img);
         }
 

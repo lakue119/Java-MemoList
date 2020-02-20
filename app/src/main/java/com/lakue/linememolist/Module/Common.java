@@ -1,6 +1,7 @@
 package com.lakue.linememolist.Module;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 public class Common {
@@ -14,6 +15,10 @@ public class Common {
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
     }
 
+    public void printLog(String log){
+        Log.i(context.getClass().getSimpleName()+"Log",log);
+    }
+
     final static int TYPE_CUSTOM_QUESTION = 1;
     public final static int TYPE_ALBUM = 1001;
     public final static int TYPE_PHOTO = 1002;
@@ -23,7 +28,13 @@ public class Common {
     public final static int REQUEST_ALBUM = 2001;
     public final static int REQUEST_IMAGE_CAPTURE = 2002;
     public final static int REQUEST_IMAGE_TYPE = 2003;
+    public final static int REQUEST_UPDATE_MEMO = 2004;
+    public final static int REQUEST_REFRESH_MEMO = 2005;
 
     public final static int RECYCLER_TYPE_MEMO_LIST = 3001;
     public final static int RECYCLER_TYPE_MEMO_IMGE = 3002;
+
+
+    public final static int TYPE_INTENT_INSERT = 4001;
+    public final static int TYPE_INTENT_UPDATE = 4002;
 }

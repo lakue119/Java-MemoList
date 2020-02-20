@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lakue.linememolist.Listener.OnItemClickListener;
-import com.lakue.linememolist.Model.DataMemo;
 import com.lakue.linememolist.Model.MyItemView;
 import com.lakue.linememolist.Module.Common;
 import com.lakue.linememolist.R;

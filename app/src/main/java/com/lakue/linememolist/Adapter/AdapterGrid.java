@@ -1,6 +1,5 @@
 package com.lakue.linememolist.Adapter;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +9,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.lakue.linememolist.Listener.OnImageDeleteListener;
 import com.lakue.linememolist.Listener.OnImageInsertListener;
-import com.lakue.linememolist.Model.DataMemo;
 import com.lakue.linememolist.Model.MyItemView;
 import com.lakue.linememolist.R;
 import com.lakue.linememolist.ViewHolder.ViewHolderGridEditItem;
-import com.lakue.linememolist.ViewHolder.ViewHolderMemo;
 
 import java.util.ArrayList;
 

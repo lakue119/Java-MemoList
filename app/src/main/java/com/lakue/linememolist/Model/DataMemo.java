@@ -1,8 +1,5 @@
 package com.lakue.linememolist.Model;
 
-import java.util.ArrayList;
-
-import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 

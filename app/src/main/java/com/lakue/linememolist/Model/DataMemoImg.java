@@ -1,7 +1,7 @@
 
 package com.lakue.linememolist.Model;
 
-import java.io.File;
+import java.util.Arrays;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -46,6 +46,13 @@ public class DataMemoImg extends RealmObject {
         this.img_file = img_file;
     }
 
-
+    @Override
+    public String toString() {
+        return "DataMemoImg{" +
+                "img_idx=" + img_idx +
+                ", memo_idx=" + memo_idx +
+                ", img_file=" + Arrays.toString(img_file) +
+                '}';
+    }
 }
 
