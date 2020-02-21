@@ -40,10 +40,10 @@ public class MemoDetailActivity extends AppCompatActivity {
 
     private AdapterRecyclerView adapter;
 
-    Realm realm;
-    Common common;
+    private Realm realm;
+    private Common common;
 
-    long memo_idx = 0;
+    private long memo_idx = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +53,7 @@ public class MemoDetailActivity extends AppCompatActivity {
         getIntentData();
         init();
 
+        //수정버튼 클릭
         btn_update.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
@@ -63,6 +64,7 @@ public class MemoDetailActivity extends AppCompatActivity {
             }
         });
 
+        //삭제버튼 클릭
         btn_delete.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
@@ -86,6 +88,7 @@ public class MemoDetailActivity extends AppCompatActivity {
         });
     }
 
+    //이전액티비티에서 인텐트 데이터 전달
     private void getIntentData() {
         if (getIntent() != null) {
             this.memo_idx = getIntent().getExtras().getLong("memo_idx");
@@ -108,6 +111,7 @@ public class MemoDetailActivity extends AppCompatActivity {
         getResultMemoImgs(memo_idx);
     }
 
+    //memo_idx에 대한 메모리스트 데이터 조회
     private void getResultMemoList(long memo_idx) {
         RealmResults<DataMemo> realmResults = realm.where(DataMemo.class)
                 .equalTo("idx", memo_idx)
@@ -118,13 +122,13 @@ public class MemoDetailActivity extends AppCompatActivity {
 
     }
 
+    //memo_idx에 대한 메모리스트이미지 조회
     private void getResultMemoImgs(long memo_idx) {
         RealmResults<DataMemoImg> realmResultImgs = realm.where(DataMemoImg.class)
                 .equalTo("memo_idx", memo_idx)
                 .findAllAsync();
 
         for (DataMemoImg memoImg : realmResultImgs) {
-            Log.i("AJKRJK", "memoImg" + memoImg.toString());
             DataMemoImg data = new DataMemoImg(memoImg.getImg_idx(), memoImg.getMemo_idx(), memoImg.getImg_file());
             adapter.addItem(data);
         }

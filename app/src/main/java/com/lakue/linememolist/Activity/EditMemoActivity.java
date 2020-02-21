@@ -54,16 +54,16 @@ public class EditMemoActivity extends ModuleActivity {
     @BindView(R.id.rv_memo_item)
     RecyclerView rv_memo_item;
 
-    AdapterGrid adapter;
+    private AdapterGrid adapter;
 
-    Realm realm;
+    private Realm realm;
 
-    CameraImageModule cameraImageModule;
+    private CameraImageModule cameraImageModule;
 
-    Common common;
+    private Common common;
 
-    Boolean isUpdate = false;
-    long memo_idx = 0;
+    private Boolean isUpdate = false;
+    private long memo_idx = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,35 +92,7 @@ public class EditMemoActivity extends ModuleActivity {
         });
     }
 
-    private void updateMemo(){
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
 
-                // 쿼리를 해서 하나를 가져온다.
-                DataMemo dataMemo = realm.where(DataMemo.class)
-                        .equalTo("idx", memo_idx)
-                        .findFirst();
-
-                dataMemo.setTitle(et_title.getText().toString());
-                dataMemo.setContent(et_content.getText().toString());
-                dataMemo.setThumbnail(adapter.getImage(0));
-
-                RealmResults<DataMemoImg> realmResultImgs = realm.where(DataMemoImg.class).equalTo("memo_idx", memo_idx).findAll();
-                realmResultImgs.deleteAllFromRealm();
-
-                addMemoImg(memo_idx);
-
-                common.showToast("메모가 수정되었습니다.");
-
-                //데이터 수정 후 MainActivity에 완료를 알림
-                Intent resultIntent = new Intent();
-                setResult(RESULT_OK, resultIntent);
-                finish();
-            }
-        });
-
-    }
 
     //글 Insert폼인지, Update폼인지 판단
     private void checkType(){
@@ -183,6 +155,7 @@ public class EditMemoActivity extends ModuleActivity {
         });
     }
 
+    //region Realm접근
     //Realm에 객체(데이터) 저장
     private void addMemo() {
 
@@ -192,28 +165,51 @@ public class EditMemoActivity extends ModuleActivity {
 
         final DataMemo memo = new DataMemo(memoId, et_title.getText().toString(), et_content.getText().toString(),adapter.getImage(0));
 
-        // 트랜잭션을 통해 데이터를 영속화합니다
-//        realm.beginTransaction();
-//        realm.copyToRealm(memo);   //Realm에 생성한 메모를 저장
-//        addMemoImg(memoId);
-//        realm.commitTransaction();
+        realm.executeTransaction(realm -> {
+            //Realm에 생성한 메모를 저장
+            realm.copyToRealm(memo);   //Realm에 생성한 메모를 저장
+            addMemoImg(memoId);
 
+            common.showToast("메모가 작성되었습니다.");
+            //데이터 저장 후 MainActivity에 완료를 알림
+            Intent resultIntent = new Intent();
+            setResult(RESULT_OK, resultIntent);
+            finish();
+        });
+    }
+
+    //메모 수정
+    private void updateMemo(){
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                //Realm에 생성한 메모를 저장
-                realm.copyToRealm(memo);   //Realm에 생성한 메모를 저장
-                addMemoImg(memoId);
 
-                common.showToast("메모가 작성되었습니다.");
-                //데이터 저장 후 MainActivity에 완료를 알림
+                // 쿼리를 해서 하나를 가져온다.
+                DataMemo dataMemo = realm.where(DataMemo.class)
+                        .equalTo("idx", memo_idx)
+                        .findFirst();
+
+                dataMemo.setTitle(et_title.getText().toString());
+                dataMemo.setContent(et_content.getText().toString());
+                dataMemo.setThumbnail(adapter.getImage(0));
+
+                RealmResults<DataMemoImg> realmResultImgs = realm.where(DataMemoImg.class).equalTo("memo_idx", memo_idx).findAll();
+                realmResultImgs.deleteAllFromRealm();
+
+                addMemoImg(memo_idx);
+
+                common.showToast("메모가 수정되었습니다.");
+
+                //데이터 수정 후 MainActivity에 완료를 알림
                 Intent resultIntent = new Intent();
                 setResult(RESULT_OK, resultIntent);
                 finish();
             }
         });
+
     }
 
+    //데이터베이스에 메모 이미지 저장
     private void addMemoImg(long memoId){
         Number maxMemoImgNum = realm.where(DataMemoImg.class).max("img_idx");
         long memoImgId = maxMemoImgNum == null ? 0 : maxMemoImgNum.longValue() + 1;
@@ -241,36 +237,13 @@ public class EditMemoActivity extends ModuleActivity {
                 .findAllAsync();
 
         for (DataMemoImg memoImg : realmResultImgs) {
-            Log.i("AJKRJK", "memoImg" + memoImg.toString());
+            common.printLog("memoImg" + memoImg.toString());
             DataMemoImg data = new DataMemoImg(memoImg.getImg_idx(), memoImg.getMemo_idx(), memoImg.getImg_file());
             adapter.addItem(data.getImg_file());
         }
     }
 
-    //URL입력 다이얼로그 생
-    private void showDialog() {
-        final EditText edittext = new EditText(this);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("URL 링크 입력");
-        builder.setMessage("이미지 URL을 입력해주세요.");
-        builder.setView(edittext);
-        builder.setPositiveButton("입력",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        String link = edittext.getText().toString();
-                        new NetworkTask().execute(link);
-
-                    }
-                });
-        builder.setNegativeButton("취소",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-        builder.show();
-    }
+    //endregion
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -313,11 +286,38 @@ public class EditMemoActivity extends ModuleActivity {
                 break;
             //사진촬영으로 가져온 이미지
             case Common.REQUEST_IMAGE_CAPTURE:
-                Log.i("AWERAWER", cameraImageModule.getImageFilePath());
+                common.printLog(cameraImageModule.getImageFilePath());
                 new ConvertTask().execute(cameraImageModule.getImageFilePath());
                 break;
 
         }
+    }
+
+    //region Image생성 및 변환
+
+    //URL입력 다이얼로그 생성
+    private void showDialog() {
+        final EditText edittext = new EditText(this);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("URL 링크 입력");
+        builder.setMessage("이미지 URL을 입력해주세요.");
+        builder.setView(edittext);
+        builder.setPositiveButton("입력",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String link = edittext.getText().toString();
+                        new NetworkTask().execute(link);
+
+                    }
+                });
+        builder.setNegativeButton("취소",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+        builder.show();
     }
 
     //네트워크에서 이미지URL을 판단하고 byte[]타입으로 변환하는 쓰레드
@@ -415,5 +415,7 @@ public class EditMemoActivity extends ModuleActivity {
             adapter.addItem(result);
         }
     }
+
+    //endregion
 
 }

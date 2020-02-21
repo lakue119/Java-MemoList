@@ -19,7 +19,7 @@ public class ViewHolderMemoImage  extends MyItemView {
     @BindView(R.id.riv_memoitem)
     RoundImageView riv_memoitem;
 
-    DataMemoImg dataMemoImg;
+    private DataMemoImg dataMemoImg;
 
     public ViewHolderMemoImage(@NonNull View itemView) {
         super(itemView);

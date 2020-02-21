@@ -46,13 +46,5 @@ public class DataMemoImg extends RealmObject {
         this.img_file = img_file;
     }
 
-    @Override
-    public String toString() {
-        return "DataMemoImg{" +
-                "img_idx=" + img_idx +
-                ", memo_idx=" + memo_idx +
-                ", img_file=" + Arrays.toString(img_file) +
-                '}';
-    }
 }
 

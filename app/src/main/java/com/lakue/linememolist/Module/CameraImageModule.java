@@ -12,7 +12,6 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
 
@@ -28,13 +27,13 @@ import java.util.List;
 
 public class CameraImageModule {
 
-    Context context;
+    private Context context;
+    private Common common;
     private String imageFilePath;
-
-    private Uri photoUri;
 
     public CameraImageModule(Context context){
         this.context = context;
+        this.common = new Common(context);
     }
 
     public void showCamera(){
@@ -63,7 +62,7 @@ public class CameraImageModule {
 
             @Override
             public void onPermissionDenied(List<String> deniedPermissions) {
-                Toast.makeText(context, "권한 거부\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+                common.showToast("권한 거부\n" + deniedPermissions.toString());
             }
         };
 
@@ -86,7 +85,7 @@ public class CameraImageModule {
             }
 
             if (photoFile != null) {
-                photoUri = FileProvider.getUriForFile(context, context.getPackageName(), photoFile);
+                Uri photoUri = FileProvider.getUriForFile(context, context.getPackageName(), photoFile);
 
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 ((Activity)context).startActivityForResult(takePictureIntent, Common.REQUEST_IMAGE_CAPTURE);

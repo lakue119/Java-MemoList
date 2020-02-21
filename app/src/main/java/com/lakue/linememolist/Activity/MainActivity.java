@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,7 +14,6 @@ import com.lakue.linememolist.Adapter.AdapterRecyclerView;
 import com.lakue.linememolist.Listener.OnItemClickListener;
 import com.lakue.linememolist.Listener.OnSingleClickListener;
 import com.lakue.linememolist.Model.DataMemo;
-import com.lakue.linememolist.Model.DataMemoImg;
 import com.lakue.linememolist.Module.Common;
 import com.lakue.linememolist.Module.ModuleActivity;
 import com.lakue.linememolist.R;
@@ -35,16 +33,17 @@ public class MainActivity extends ModuleActivity {
     private AdapterRecyclerView adapter;
     private Realm realm;
 
+    private Common common;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this,this);
-
+        common = new Common(this);
 
         init();
-        //getData();
 
         btn_edit_move.setOnClickListener(new OnSingleClickListener() {
             @Override
@@ -69,7 +68,7 @@ public class MainActivity extends ModuleActivity {
         realm = Realm.getDefaultInstance();
 
         getResultMemoList();
-        Log.e("MainActivityLog", "realm address : " + realm.getPath());
+        common.printErrortLog("realm address : " + realm.getPath());
 
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -83,6 +82,7 @@ public class MainActivity extends ModuleActivity {
 
     }
 
+    //메인 이미지 리스트에 보여질 데이터 조회
     private void getResultMemoList(){
         RealmResults<DataMemo> realmResults = realm.where(DataMemo.class)
                 .findAllAsync();
@@ -91,7 +91,7 @@ public class MainActivity extends ModuleActivity {
 
         for(DataMemo memo : realmResults) {
             DataMemo data =new DataMemo(memo.getIdx(),memo.getTitle(),memo.getContent(),memo.getThumbnail());
-            Log.i("AJKRJK",data.toString());
+            common.printLog(data.toString());
             adapter.addItem(data);
         }
     }

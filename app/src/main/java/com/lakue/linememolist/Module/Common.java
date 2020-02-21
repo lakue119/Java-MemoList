@@ -2,6 +2,7 @@ package com.lakue.linememolist.Module;
 
 import android.content.Context;
 import android.util.Log;
+import android.util.TypedValue;
 import android.widget.Toast;
 
 public class Common {
@@ -18,8 +19,10 @@ public class Common {
     public void printLog(String log){
         Log.i(context.getClass().getSimpleName()+"Log",log);
     }
+    public void printErrortLog(String log){
+        Log.e(context.getClass().getSimpleName()+"Log",log);
+    }
 
-    final static int TYPE_CUSTOM_QUESTION = 1;
     public final static int TYPE_ALBUM = 1001;
     public final static int TYPE_PHOTO = 1002;
     public final static int TYPE_URL = 1003;
@@ -37,4 +40,9 @@ public class Common {
 
     public final static int TYPE_INTENT_INSERT = 4001;
     public final static int TYPE_INTENT_UPDATE = 4002;
+
+    public static int convertPixelsToDp(float px, Context context) {
+        int value = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, context.getResources().getDisplayMetrics());
+        return value;
+    }
 }

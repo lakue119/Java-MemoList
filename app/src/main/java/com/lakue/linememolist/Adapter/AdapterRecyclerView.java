@@ -23,11 +23,11 @@ public class AdapterRecyclerView extends RecyclerView.Adapter<MyItemView> {
 
     // adapter에 들어갈 list 입니다.
     private ArrayList<RealmObject> listData = new ArrayList<>();
-    int SEL_TYPE;
+    private int SEL_TYPE;
 
-    Context context;
+    private Context context;
 
-    OnItemClickListener onItemClickListener;
+    private OnItemClickListener onItemClickListener;
 
     public AdapterRecyclerView(int objtype){
         this.SEL_TYPE = objtype;

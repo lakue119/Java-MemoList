@@ -19,8 +19,10 @@ public class AdapterGrid extends RecyclerView.Adapter<MyItemView> {
 
     // adapter에 들어갈 list 입니다.
     private ArrayList<byte[]> listData = new ArrayList<>();
-    OnImageInsertListener onImageInsertListener;
-    OnImageDeleteListener onImageDeleteListener;
+
+    private OnImageInsertListener onImageInsertListener;
+    private OnImageDeleteListener onImageDeleteListener;
+
     @NonNull
     @Override
     public MyItemView onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -33,7 +35,7 @@ public class AdapterGrid extends RecyclerView.Adapter<MyItemView> {
         ViewHolderGridEditItem viewHolderGridEditItem = (ViewHolderGridEditItem) holder;
 
         if (position == listData.size()) {
-            viewHolderGridEditItem.onBind(position);
+            viewHolderGridEditItem.onBind();
             viewHolderGridEditItem.setOnImageInsertListener(new OnImageInsertListener() {
                 @Override
                 public void onImageInsert() {
@@ -53,31 +55,31 @@ public class AdapterGrid extends RecyclerView.Adapter<MyItemView> {
 
     @Override
     public int getItemCount() {
-        return listData.size()+1;
+        return listData.size() + 1;
     }
 
-    public void removeItem(){
+    public void removeItem() {
         listData.clear();
     }
 
-    public byte[] getImage(int position){
-        if(listData.size() == 0){
+    public byte[] getImage(int position) {
+        if (listData.size() == 0) {
             return null;
         } else {
             return listData.get(position);
         }
     }
 
-    public void removeItem(int position){
+    public void removeItem(int position) {
         listData.remove(position);
         notifyItemRemoved(position);
-        notifyItemRangeChanged(position,getItemCount());
+        notifyItemRangeChanged(position, getItemCount());
     }
 
     public void addItem(byte[] data) {
         // 외부에서 item을 추가시킬 함수입니다.
         listData.add(data);
-        notifyItemChanged(listData.size()-1);
+        notifyItemChanged(listData.size() - 1);
     }
 
     public void setOnImageInsertListener(OnImageInsertListener onImageInsertListener) {

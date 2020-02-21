@@ -27,7 +27,7 @@ public class PopupActivity extends Activity {
     @BindView(R.id.iv_close)
     ImageView iv_close;
 
-    Context context;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

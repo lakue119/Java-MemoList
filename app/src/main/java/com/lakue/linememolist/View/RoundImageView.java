@@ -13,7 +13,7 @@ import com.lakue.linememolist.R;
 public class RoundImageView extends ImageView {
 
     // 라운드처리 강도 값을 크게하면 라운드 범위가 커짐
-    public static float radius = 7.0f;
+    private  float radius = 7.0f;
 
     public RoundImageView(Context context) {
         super(context);

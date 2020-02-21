@@ -1,5 +1,6 @@
 package com.lakue.linememolist.ViewHolder;
 
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,9 +30,9 @@ public class ViewHolderMemo extends MyItemView {
     @BindView(R.id.ll_memo)
     LinearLayout ll_memo;
 
-    DataMemo dataMemo;
+    private DataMemo dataMemo;
 
-    OnItemClickListener onItemClickListener;
+    private OnItemClickListener onItemClickListener;
 
     public ViewHolderMemo(@NonNull View itemView) {
         super(itemView);
@@ -61,4 +62,7 @@ public class ViewHolderMemo extends MyItemView {
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
+
+
+
 }
