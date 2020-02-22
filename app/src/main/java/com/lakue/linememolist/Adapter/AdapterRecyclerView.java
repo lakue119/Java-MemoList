@@ -29,6 +29,7 @@ public class AdapterRecyclerView extends RecyclerView.Adapter<MyItemView> {
 
     private OnItemClickListener onItemClickListener;
 
+    //생성할 때 메인 메모리스트인지, 상세 이미지리스트인지 구분
     public AdapterRecyclerView(int objtype){
         this.SEL_TYPE = objtype;
     }

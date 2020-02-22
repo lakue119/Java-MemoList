@@ -8,7 +8,6 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,9 +33,7 @@ import org.apache.commons.io.IOUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -330,23 +327,12 @@ public class EditMemoActivity extends ModuleActivity {
             try {
                 link = links[0];
                 URL url = new URL(link);
-                URLConnection con = url.openConnection();
-                HttpURLConnection exitCode = (HttpURLConnection) con;
+                is = url.openStream ();
+                imageBytes = IOUtils.toByteArray(is);
 
-                //200 Success가 떨어지면 byte[]로 변환
-                if(exitCode.getResponseCode() == 200){
-                    is = url.openStream ();
-                    imageBytes = IOUtils.toByteArray(is);
-
-                    if(!isImage(imageBytes)){
-                        return null;
-                    }
-
-                } else{
-                    common.showToast("정상적인 이미지 URL을 입력해주세요.");
+                if(!isImage(imageBytes)){
+                    return null;
                 }
-
-
 
                 return imageBytes;
             } catch (Exception e) {

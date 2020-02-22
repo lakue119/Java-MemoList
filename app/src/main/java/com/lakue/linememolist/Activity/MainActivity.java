@@ -50,7 +50,7 @@ public class MainActivity extends ModuleActivity {
             public void onSingleClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), EditMemoActivity.class);
                 intent.putExtra("type",Common.TYPE_INTENT_INSERT);
-                startActivityForResult(intent, 1001);
+                startActivityForResult(intent, Common.REQUEST_DETAIL_MEMO);
             }
         });
 
@@ -86,7 +86,6 @@ public class MainActivity extends ModuleActivity {
     private void getResultMemoList(){
         RealmResults<DataMemo> realmResults = realm.where(DataMemo.class)
                 .findAllAsync();
-
         realmResults = realmResults.sort("idx");
 
         for(DataMemo memo : realmResults) {
@@ -101,9 +100,15 @@ public class MainActivity extends ModuleActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(resultCode == RESULT_OK){
-            adapter.removeItem();
-            getResultMemoList();
-            adapter.notifyDataSetChanged();
+            switch (requestCode){
+                case Common.REQUEST_REFRESH_MEMO:
+                case Common.REQUEST_DETAIL_MEMO:
+                    adapter.removeItem();
+                    getResultMemoList();
+                    adapter.notifyDataSetChanged();
+                    break;
+            }
+
         }
     }
 }

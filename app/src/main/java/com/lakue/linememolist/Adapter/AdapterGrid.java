@@ -34,6 +34,7 @@ public class AdapterGrid extends RecyclerView.Adapter<MyItemView> {
     public void onBindViewHolder(@NonNull MyItemView holder, int position) {
         ViewHolderGridEditItem viewHolderGridEditItem = (ViewHolderGridEditItem) holder;
 
+        //마지막번째 뷰홀더는 이미지 추가버튼으로 생성
         if (position == listData.size()) {
             viewHolderGridEditItem.onBind();
             viewHolderGridEditItem.setOnImageInsertListener(new OnImageInsertListener() {
@@ -62,6 +63,7 @@ public class AdapterGrid extends RecyclerView.Adapter<MyItemView> {
         listData.clear();
     }
 
+    //realm데이터에 넣을 메모리스트 이미지의 position번쨰 이미지 가져오기
     public byte[] getImage(int position) {
         if (listData.size() == 0) {
             return null;
@@ -70,12 +72,14 @@ public class AdapterGrid extends RecyclerView.Adapter<MyItemView> {
         }
     }
 
+    // position번째 이미지 제거
     public void removeItem(int position) {
         listData.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, getItemCount());
     }
 
+    //이미지 추가
     public void addItem(byte[] data) {
         // 외부에서 item을 추가시킬 함수입니다.
         listData.add(data);

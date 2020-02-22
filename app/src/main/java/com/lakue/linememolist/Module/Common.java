@@ -33,6 +33,7 @@ public class Common {
     public final static int REQUEST_IMAGE_TYPE = 2003;
     public final static int REQUEST_UPDATE_MEMO = 2004;
     public final static int REQUEST_REFRESH_MEMO = 2005;
+    public final static int REQUEST_DETAIL_MEMO = 2006;
 
     public final static int RECYCLER_TYPE_MEMO_LIST = 3001;
     public final static int RECYCLER_TYPE_MEMO_IMGE = 3002;

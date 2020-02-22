@@ -128,6 +128,7 @@ public class MemoDetailActivity extends AppCompatActivity {
                 .equalTo("memo_idx", memo_idx)
                 .findAllAsync();
 
+        realmResultImgs = realmResultImgs.sort("img_idx");
         for (DataMemoImg memoImg : realmResultImgs) {
             DataMemoImg data = new DataMemoImg(memoImg.getImg_idx(), memoImg.getMemo_idx(), memoImg.getImg_file());
             adapter.addItem(data);
@@ -139,9 +140,17 @@ public class MemoDetailActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(resultCode == RESULT_OK){
-            Intent resultIntent = new Intent();
-            setResult(RESULT_OK, resultIntent);
-            finish();
+
+            switch (requestCode){
+                case Common.REQUEST_UPDATE_MEMO:
+                    Intent resultIntent = new Intent();
+                    setResult(RESULT_OK, resultIntent);
+                    finish();
+                    break;
+            }
+
+
+
         }
     }
 }
