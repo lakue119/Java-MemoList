@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">LineMemoList</string>
+
+    <string name="test">Test</string>
 </resources>

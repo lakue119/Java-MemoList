@@ -64,7 +64,6 @@ public class MainActivity extends ModuleActivity {
         adapter = new AdapterRecyclerView(Common.RECYCLER_TYPE_MEMO_LIST);
         rv_memolist.setAdapter(adapter);
 
-        Realm.init(this);
         realm = Realm.getDefaultInstance();
 
         getResultMemoList();

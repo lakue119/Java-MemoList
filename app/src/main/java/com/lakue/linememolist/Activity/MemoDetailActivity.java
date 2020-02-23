@@ -104,7 +104,6 @@ public class MemoDetailActivity extends AppCompatActivity {
         adapter = new AdapterRecyclerView(Common.RECYCLER_TYPE_MEMO_IMGE);
         rv_memo_image.setAdapter(adapter);
 
-        Realm.init(this);
         realm = Realm.getDefaultInstance();
 
         getResultMemoList(memo_idx);

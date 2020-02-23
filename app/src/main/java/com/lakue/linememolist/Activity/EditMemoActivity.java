@@ -95,7 +95,7 @@ public class EditMemoActivity extends ModuleActivity {
     private void checkType(){
         Intent intent = getIntent();
         if(intent != null){
-            int type = getIntent().getExtras().getInt("type");
+            int type = intent.getIntExtra("type",Common.TYPE_INTENT_INSERT);
             if(type == Common.TYPE_INTENT_UPDATE){
                 memo_idx = getIntent().getExtras().getLong("memo_idx");
                 isUpdate = true;
@@ -134,7 +134,6 @@ public class EditMemoActivity extends ModuleActivity {
         adapter = new AdapterGrid();
         rv_memo_item.setAdapter(adapter);
 
-        Realm.init(this);
         realm = Realm.getDefaultInstance();
 
         adapter.setOnImageInsertListener(new OnImageInsertListener() {
